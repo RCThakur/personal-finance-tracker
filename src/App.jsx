@@ -1,36 +1,48 @@
 // src/App.jsx
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import React from "react";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
-import { TransactionProvider } from "./context/TransactionContext";
-
-import SidebarLayout from "./layouts/SidebarLayout";
-import Dashboard from "./pages/Dashboard";
-import AddTransaction from "./pages/AddTransaction";
-import AllTransactions from "./pages/AllTransactions";
-import Reports from "./pages/Reports";
+import ProtectedRoute from "./components/ProtectedRoute";
+import Landing from "./pages/Landing";
 import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import DashboardHome from "./pages/DashboardHome";
+import Analytics from "./pages/Analytics";
+import Budgets from "./pages/Budgets";
+import Goals from "./pages/Goals";
+import Reports from "./pages/Reports";
+import Categories from "./pages/Categories";
+import Profile from "./pages/Profile";
 
 function App() {
   return (
-    <AuthProvider>
-      <TransactionProvider>
-        <Router>
-          <Routes>
-            {/* Login route - outside the sidebar */}
-            <Route path="/login" element={<Login />} />
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/" element={<Landing />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
 
-            {/* Sidebar layout for authenticated pages */}
-            <Route path="/" element={<SidebarLayout />}>
-              <Route index element={<Navigate to="dashboard" />} />
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="add" element={<AddTransaction />} />
-              <Route path="transactions" element={<AllTransactions />} />
-              <Route path="reports" element={<Reports />} />
-            </Route>
-          </Routes>
-        </Router>
-      </TransactionProvider>
-    </AuthProvider>
+          {/* Dashboard Routes */}
+          <Route path="/dashboard" element={<ProtectedRoute />}>
+            <Route index element={<DashboardHome />} />
+            <Route path="analytics" element={<Analytics />} />
+            <Route path="budgets" element={<Budgets />} />
+            <Route path="goals" element={<Goals />} />
+            <Route path="reports" element={<Reports />} />
+            <Route path="categories" element={<Categories />} />
+            <Route path="profile" element={<Profile />} />
+          </Route>
+
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </AuthProvider>
+    </Router>
   );
 }
 
